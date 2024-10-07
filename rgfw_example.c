@@ -228,16 +228,19 @@ static const char key_map[256] = {
 
 
 static int text_width(mu_Font font, const char *text, int len) {
+  RGFW_UNUSED(font);
   if (len == -1) { len = strlen(text); }
   return r_get_text_width(text, len);
 }
 
 static int text_height(mu_Font font) {
-  return r_get_text_height();
+	RGFW_UNUSED(font);
+	return r_get_text_height();
 }
 
 
 int main(int argc, char **argv) {
+  RGFW_UNUSED(argc); RGFW_UNUSED(argv);
   r_init();
 
   /* init microui */
@@ -247,7 +250,7 @@ int main(int argc, char **argv) {
   ctx->text_height = text_height;
 
   /* main loop */
-  for (;;) {
+  while (RGFW_window_shouldClose(window) == RGFW_FALSE) {
     /* handle RGFW events */
     while (RGFW_window_checkEvent(window)) {
       switch (window->event.type) {
@@ -255,7 +258,8 @@ int main(int argc, char **argv) {
         case RGFW_mousePosChanged: mu_input_mousemove(ctx, window->event.point.x,  window->event.point.y); break;
 
         case RGFW_mouseButtonPressed:
-		  mu_input_scroll(ctx, 0, window->event.scroll * -30); 
+		  mu_input_scroll(ctx, 0, window->event.scroll * -30);
+		   __attribute__((fallthrough));
 		case RGFW_mouseButtonReleased: {
           int b = button_map[window->event.button & 0xff];
           if (b && window->event.type == RGFW_mouseButtonPressed) { mu_input_mousedown(ctx, window->event.point.x,  window->event.point.y , b); }
@@ -267,6 +271,7 @@ int main(int argc, char **argv) {
 		  char str[2] = {'\0', '\0'};
 		  str[0] = RGFW_keyCodeToCharAuto(window->event.keyCode, window->event.lockState);
 		  mu_input_text(ctx, str);
+		  __attribute__((fallthrough));
 	    }
 		case RGFW_keyReleased: {
           int c = key_map[window->event.keyCode & 0xff];
