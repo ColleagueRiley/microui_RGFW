@@ -267,14 +267,19 @@ int main(int argc, char **argv) {
 		  char str[2] = {'\0', '\0'};
 		  str[0] = RGFW_keyCodeToCharAuto(window->event.keyCode, window->event.lockState);
 		  mu_input_text(ctx, str);
-	   }
+	    }
 		case RGFW_keyReleased: {
           int c = key_map[window->event.keyCode & 0xff];
           if (c && window->event.type == RGFW_keyPressed) { mu_input_keydown(ctx, c); }
           if (c && window->event.type == RGFW_keyReleased) { mu_input_keyup(ctx, c);   }
           break;
         }
-      }
+		
+		case RGFW_windowResized:
+		  width = window->r.w; 
+		  height = window->r.h;
+		  break;
+	  }
     }
 
     /* process frame */
