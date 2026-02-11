@@ -1,5 +1,3 @@
-#include <SDL2/SDL.h>
-
 #include <assert.h>
 #include "renderer.h"
 #include "atlas.inl"
